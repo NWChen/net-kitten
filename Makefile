@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g -Wall
 LDFLAGS = -g
 LDLIBS = 
-talk: talk.o die.o
+talk: talk.o client.o server.o receive.o die.o
 talk.o: talk.c
 die.o: die.c
 receive.o: receive.c
@@ -11,7 +11,7 @@ server.o: server.c
 
 .PHONY: clean
 clean:
-	rm -f *.o *.out talk core
+	rm -f *.o *.out talk client server core
 
 .PHONY: test-client
 test-client: die.o receive.o client.o

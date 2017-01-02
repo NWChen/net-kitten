@@ -5,6 +5,8 @@
 #include <unistd.h>
 
 void die(char *s);
+int handleClient(char *serverIP, unsigned short serverPort);
+int handleServer(unsigned short serverPort);
 
 int main(int argc, char **argv) {
 
@@ -16,17 +18,12 @@ int main(int argc, char **argv) {
 	if(atoi(argv[2]) < 256 || atoi(argv[2]) > 65536)
 		die("port is invalid or in use.");
 
+	char *serverIP = argv[1];
+	unsigned short serverPort = atoi(argv[2]);
+
 	// delegate client and server
-	pid_t pid = fork();
-	if(pid == 0) {
-		execl("client", "./client", argv[1], argv[2], NULL);
-	} else if(pid > 0) {
-		if((waitpid(pid, NULL, WNOHANG)) > 0) {
-			fprintf(stderr, "%s\n", "initiating server because client died ):");
-			execl("server", "./server", argv[1], argv[2], NULL);
-		}
-	} else
-		die("fork() failed");
+	if(handleClient(serverIP, serverPort) == 0)
+		handleServer(serverPort);
 
 	return 0;	
 }

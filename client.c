@@ -12,20 +12,15 @@
 
 void die(char *s);
 
-int main(int argc, char *argv[]) {
+int handleClient(char *serverIP, unsigned short serverPort) {
 
         /*
          * === SOCKET SETUP ===
          */
         int sock;                               // Socket descriptor
         struct sockaddr_in serverAddr;          // Server address
-        unsigned short serverPort;              // Server port
-        char *serverIP;                         // Server IP
         //char message[BUFSIZE];                  // String to send to server
         char buffer[BUFSIZE];                   // Buffer to receive response
-
-        serverIP = argv[1];
-        serverPort = atoi(argv[2]);
 
         // create TCP socket
         if((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
@@ -39,10 +34,7 @@ int main(int argc, char *argv[]) {
 
         // establish connection to server
         if(connect(sock, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
-                die("connect() failed");
-        /*
-         * === SOCKET SETUP ===
-         */
+			return 0;
 
         /*
          * === RECEIVE AND SEND ===
@@ -58,11 +50,7 @@ int main(int argc, char *argv[]) {
                 } else
                         die("fork() failed");
         }
-        /*
-         * === RECEIVE AND SEND ===
-         */
 
-        // parent terminates - watch out for orphaned child?
         close(sock);
-        return 0;
+        return 1;
 }

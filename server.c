@@ -10,7 +10,7 @@
 
 void die(char *s);
 
-int main(int argc, char *argv[]) {
+int handleServer(unsigned short servPort) {
 
         /*
          * SERVER SETUP
@@ -19,10 +19,7 @@ int main(int argc, char *argv[]) {
         int clntSock;
         struct sockaddr_in servAddr;
         struct sockaddr_in clntAddr;
-        unsigned short servPort;
         unsigned int clntLen;
-
-        servPort = atoi(argv[2]);
 
         // create socket for incoming connections
         if((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
@@ -46,9 +43,6 @@ int main(int argc, char *argv[]) {
         clntLen = sizeof(clntAddr);
         if((clntSock = accept(servSock, (struct sockaddr *)&clntAddr, &clntLen)) < 0)
                 die("accept() failed");
-        /*
-         * SERVER SETUP
-         */
 
         /*        
          * RECEIVE AND SEND
@@ -65,9 +59,6 @@ int main(int argc, char *argv[]) {
                 } else
                         die("fork() failed");
         }
-        /*
-         * RECEIVE AND SEND
-         */
 
         close(clntSock);
         close(servSock);
