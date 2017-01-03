@@ -22,8 +22,10 @@ int main(int argc, char **argv) {
 	unsigned short serverPort = atoi(argv[2]);
 
 	// delegate client and server
-	if(handleClient(serverIP, serverPort) == 0)
+	if(handleClient(serverIP, serverPort) == 0) {
+		//fprintf(stderr, "%s\n", "starting server");
 		handleServer(serverPort);
+	}
 
 	return 0;	
 }

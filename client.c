@@ -2,6 +2,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -25,6 +26,12 @@ int handleClient(char *serverIP, unsigned short serverPort) {
         // create TCP socket
         if((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
                 die("socket() failed");
+
+		// convert hostname to IP address
+		struct hostent *he;
+		if((he = gethostbyname(serverIP)) == NULL)
+			die("invalid hostname");
+		serverIP = inet_ntoa(*(struct in_addr *)he->h_addr);
 
         // construct server address structure
         memset(&serverAddr, 0, sizeof(serverAddr));
